@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://ceu2ulvktkcr3"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_g3i8c"]
+[ext_resource type="PackedScene" uid="uid://djnqrkmv7mbag" path="res://celestial_body.tscn" id="1_h158x"]
+[ext_resource type="PackedScene" uid="uid://buhiu76lcapxe" path="res://spaceguy.tscn" id="3_sfprf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qndcf"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_277tk"]
+sky_material = SubResource("ProceduralSkyMaterial_qndcf")
+
+[sub_resource type="Environment" id="Environment_tx8n4"]
+background_energy_multiplier = 0.0
+sky = SubResource("Sky_277tk")
+ambient_light_source = 1
+reflected_light_source = 1
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rlpsf"]
+emission_enabled = true
+emission = Color(0.839216, 0.698039, 0, 1)
+emission_energy_multiplier = 16.0
+rim = 0.11
+rim_tint = 0.48
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_g3i8c")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tx8n4")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.08165e-12)
+light_energy = 16.0
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+omni_range = 10000.0
+omni_attenuation = 0.267946
+
+[node name="SpaceGuy" parent="." instance=ExtResource("3_sfprf")]
+transform = Transform3D(-0.999999, 0, -0.00169292, 0, 1, 0, 0.00169292, 0, -0.999999, -842.092, 0, -1332.44)
+
+[node name="Sun" parent="." instance=ExtResource("1_h158x")]
+mass = 1000.0
+radius = 800.0
+surface_material = SubResource("StandardMaterial3D_rlpsf")
+
+[node name="PlanetOne" parent="." instance=ExtResource("1_h158x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -305.234, 0, -4095.14)
+mass = 30.0
+radius = 300.0
+initialVelocity = Vector3(10, 2.08165e-12, 2.08165e-12)

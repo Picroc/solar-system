@@ -1,0 +1,94 @@
+[gd_scene load_steps=18 format=3 uid="uid://ca5d08ffs3daq"]
+
+[ext_resource type="Shader" path="res://simplae_water.gdshader" id="1_i0akf"]
+[ext_resource type="Shader" path="res://post_processing.gdshader" id="3_aii3i"]
+[ext_resource type="Texture2D" uid="uid://pbfe0mtj4yb8" path="res://cape_hill_4k.exr" id="4_cnghb"]
+[ext_resource type="PackedScene" uid="uid://buhiu76lcapxe" path="res://spaceguy.tscn" id="4_m2234"]
+[ext_resource type="Script" path="res://ShaderMesh.gd" id="5_ooatr"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gsog6"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_oppsh"]
+sky_material = SubResource("ProceduralSkyMaterial_gsog6")
+
+[sub_resource type="Environment" id="Environment_sag4w"]
+background_mode = 2
+sky = SubResource("Sky_oppsh")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cyq7u"]
+noise_type = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6hlvw"]
+seamless = true
+seamless_blend_skirt = 1.0
+noise = SubResource("FastNoiseLite_cyq7u")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3m6gf"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_24l26"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_3m6gf")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u6oib"]
+render_priority = 0
+shader = ExtResource("1_i0akf")
+shader_parameter/height_scale = 1.0
+shader_parameter/noise = SubResource("NoiseTexture2D_6hlvw")
+shader_parameter/normalmap = SubResource("NoiseTexture2D_24l26")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_433me"]
+material = SubResource("ShaderMaterial_u6oib")
+size = Vector2(10, 10)
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="SphereMesh" id="SphereMesh_jo16j"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_85lky"]
+render_priority = 0
+shader = ExtResource("3_aii3i")
+shader_parameter/power = 71.375
+shader_parameter/darkness = 1.985
+shader_parameter/blackAndWhite = 0.085
+shader_parameter/colourAMix = Vector3(8.305, 24.525, 23.625)
+shader_parameter/colourBMix = Vector3(4.455, -1.585, 90.265)
+shader_parameter/lightDir = Vector3(54.39, 2.08165e-12, 2.08165e-12)
+shader_parameter/paramA = 1.5
+shader_parameter/paramB = -173.835
+shader_parameter/mode = 1
+shader_parameter/skybox = ExtResource("4_cnghb")
+
+[sub_resource type="QuadMesh" id="QuadMesh_ocshc"]
+material = SubResource("ShaderMaterial_85lky")
+flip_faces = true
+size = Vector2(2, 2)
+
+[node name="ShaderTest" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_sag4w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("PlaneMesh_433me")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.73318)
+visible = false
+mesh = SubResource("SphereMesh_jo16j")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.711315, 0.702873, 0, -0.702873, 0.711315, 0, 0, 0)
+visible = false
+
+[node name="SpaceGuy" parent="." instance=ExtResource("4_m2234")]
+
+[node name="ShaderMesh" type="MeshInstance3D" parent="SpaceGuy"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_ocshc")
+skeleton = NodePath("../..")
+script = ExtResource("5_ooatr")

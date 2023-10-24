@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://buhiu76lcapxe"]
+
+[ext_resource type="Script" path="res://spaceguy.gd" id="1_dek5r"]
+[ext_resource type="Script" path="res://ForceSphere.gd" id="2_bk02q"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5sa8e"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_v8shn"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_lu2o8"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dpj86"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.027451)
+emission_enabled = true
+emission = Color(0.862745, 0, 0, 1)
+emission_energy_multiplier = 7.29
+
+[node name="SpaceGuy" type="CharacterBody3D"]
+script = ExtResource("1_dek5r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_5sa8e")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_v8shn")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+far = 50000.0
+
+[node name="ForceSphere" type="MeshInstance3D" parent="Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.640633, 0.376161, -1.06401)
+mesh = SubResource("SphereMesh_lu2o8")
+surface_material_override/0 = SubResource("StandardMaterial3D_dpj86")
+script = ExtResource("2_bk02q")
+radius = 0.01

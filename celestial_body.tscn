@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://djnqrkmv7mbag"]
+
+[ext_resource type="Script" path="res://celestial_body.gd" id="1_7akvr"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_b4vcn"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qojg1"]
+resource_local_to_scene = true
+radius = 10.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_iqpfv"]
+resource_local_to_scene = true
+radius = 30.0
+height = 60.0
+
+[node name="CelestialBody" type="RigidBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_b4vcn")
+script = ExtResource("1_7akvr")
+radius = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_qojg1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_iqpfv")
+
+[connection signal="radius_changed" from="." to="." method="_on_radius_changed"]
+[connection signal="surface_material_changed" from="." to="." method="_on_surface_material_changed"]
